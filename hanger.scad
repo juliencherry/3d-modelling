@@ -1,13 +1,6 @@
-$fn = 100;
+include <clip.scad>
 
-module clip(inner_radius, outer_radius, height, thickness) {
-    cutout_radius = thickness * 2;
-    linear_extrude(height) difference() {
-        circle(inner_radius + thickness);
-        circle(inner_radius);
-        translate([0, outer_radius - cutout_radius + thickness / 2, 0]) circle(thickness * 2);
-    }
-}
+$fn = 100;
 
 module peg(height, radius) {
     difference() {
@@ -34,12 +27,7 @@ module attached_hook(attachment_height, major_radius, minor_radius, clip_inner_r
     }
 }
 
-module hanger(clip_inner_diameter, clip_thickness) {    
-    clip_inner_radius = clip_inner_diameter / 2;
-    clip_outer_radius = clip_inner_radius + clip_thickness;
-    clip_outer_diameter = clip_outer_radius * 2;
-    clip_height = clip_inner_diameter;
-    
+module hanger(clip_inner_diameter, clip_height, clip_thickness) {
     attachment_rotation = 360 - 360 / 3;
     
     peg_length = 50;
@@ -52,10 +40,10 @@ module hanger(clip_inner_diameter, clip_thickness) {
     hook_major_radius = peg_length / 2;
     hook_minor_radius = peg_radius;
     
-    rotate(a = attachment_rotation) attached_hook(hook_attachment_height, hook_major_radius, hook_minor_radius, clip_inner_radius);
-    rotate(a = -attachment_rotation) attached_hook(hook_attachment_height, hook_major_radius, hook_minor_radius, clip_inner_radius);
+    rotate(a = attachment_rotation) attached_hook(hook_attachment_height, hook_major_radius, hook_minor_radius, clip_inner_diameter / 2);
+    rotate(a = -attachment_rotation) attached_hook(hook_attachment_height, hook_major_radius, hook_minor_radius, clip_inner_diameter / 2);
     
-    clip(clip_inner_radius, clip_outer_radius, clip_height, clip_thickness); 
+    clip(clip_inner_diameter, clip_height, clip_thickness);
 }
 
-hanger(15.5, 2);
+hanger(15.5, 15.5, 2);
